@@ -1,0 +1,3 @@
+>dotnet add {{project folder}} references ..// 
+
+if there are issues check netstandard2.0 versions in the csproj
