@@ -25,12 +25,23 @@ namespace API
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services) //dependancy injection container
+        public void ConfigureServices(IServiceCollection services) //dependancy injection container (services)
         {
             //all services go here
 
             //controller service
             services.AddControllers();
+
+            //CORS service - cross origin resource sharing
+            services.AddCors(options => 
+            {
+                options.AddPolicy("CorsPolicy", policy =>
+                {
+                    //allow access from client-app
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                });
+            } );
+
 
             //database service
             services.AddDbContext<DataContext>(opt => 
@@ -56,6 +67,9 @@ namespace API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            //tells the program to use cors in the middleware
+            app.UseCors("CorsPolicy");
 
             //map controller endpoints into api
             app.UseEndpoints(endpoints =>
